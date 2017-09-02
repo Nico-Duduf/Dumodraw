@@ -49,7 +49,7 @@ void Cell::click(int currentTool)
 {
     if (currentTool == 1) setChecked(true);
     else if (currentTool == 2) setChecked(false);
-    else if (currentTool == 3) setSelected(true);
+    else if (currentTool == 3 || currentTool == 5 || currentTool == 6) setSelected(true);
     else if (currentTool == 4) setSelected(false);
 }
 
@@ -81,6 +81,11 @@ void Cell::setChecked(bool c)
     }
     updatePixmap();
     emit swapped(checked);
+}
+
+bool Cell::isSelected()
+{
+    return selected;
 }
 
 void Cell::updatePixmap()
@@ -186,11 +191,6 @@ void Cell::setTopLeft(bool c)
 void Cell::setTop(bool c)
 {
     top = c;
-
-#ifdef QT_DEBUG
-    qDebug() << "top";
-    qDebug() << c;
-#endif
     updatePixmap();
 }
 

@@ -16,6 +16,8 @@ public:
     explicit Cell(int r, int c, QWidget *parent = 0);
     void click(int currentTool);
     void setChecked(bool c);
+    void setSelected(bool c);
+    bool isSelected();
 
     int getRow();
     int getColumn();
@@ -73,7 +75,6 @@ private:
     //------ METHODS ---------
 
     void updatePixmap();
-    void setSelected(bool c);
 
     //------ OPERATORS ---------
 

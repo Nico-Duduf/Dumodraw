@@ -62,8 +62,15 @@ void MainWindow::clickCell(QPoint pos)
     {
         currentCell = cell;
         cell->click(currentTool);
+        if (currentTool == 3 || currentTool == 5 || currentTool == 6)
+        {
+            selectedCells << cell;
+        }
+        else if (currentTool == 4)
+        {
+            selectedCells.removeAll(cell);
+        }
     }
-
 }
 
 void MainWindow::swapTool()
@@ -92,6 +99,64 @@ void MainWindow::swapTool()
         actionSelect->setChecked(true);
         actionDeselect->setChecked(false);
     }
+    else if (currentTool == 5)
+    {
+        currentTool = 6;
+        actionConnect->setChecked(false);
+        actionDisconnect->setChecked(true);
+    }
+    else if (currentTool == 6)
+    {
+        currentTool = 5;
+        actionConnect->setChecked(true);
+        actionDisconnect->setChecked(false);
+    }
+}
+
+void MainWindow::connectSelectedCells(bool c)
+{
+    //parcourir toutes les cellules sélectionnées
+    foreach(Cell *cell,selectedCells)
+    {
+        //chercher les voisines sélectionnées
+        //top
+        if (cell->getRow() > 0)
+        {
+            Cell *top = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow()-1,cell->getColumn())->widget());
+            if (top->isSelected()) cell->setTop(c);
+        }
+        //right
+        if (cell->getRow() < mainLayout->rowCount()-1)
+        {
+            Cell *right = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow(),cell->getColumn()+1)->widget());
+            if (right->isSelected()) cell->setRight(c);
+        }
+        //bottom
+        if (cell->getColumn() < mainLayout->columnCount()-1)
+        {
+            Cell *bottom = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow()+1,cell->getColumn())->widget());
+            if (bottom->isSelected()) cell->setBottom(c);
+        }
+        //left
+        if (cell->getRow() > 0)
+        {
+            Cell *left = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow(),cell->getColumn()-1)->widget());
+            if (left->isSelected()) cell->setLeft(c);
+        }
+    }
+
+    selectAll(false);
+}
+
+void MainWindow::selectAll(bool c)
+{
+    selectedCells.clear();
+    for (int i = 0 ; i < mainLayout->count() ; i++)
+    {
+        Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(i)->widget());
+        cell->setSelected(c);
+        if (c) selectedCells << cell;
+    }
 }
 
 //ACTIONS
@@ -102,6 +167,8 @@ void MainWindow::on_actionPaint_triggered()
     actionDeselect->setChecked(false);
     actionSelect->setChecked(false);
     actionErase->setChecked(false);
+    actionDisconnect->setChecked(false);
+    actionConnect->setChecked(false);
     currentTool = 1;
 }
 
@@ -112,6 +179,8 @@ void MainWindow::on_actionErase_triggered()
     actionDeselect->setChecked(false);
     actionSelect->setChecked(false);
     actionErase->setChecked(true);
+    actionDisconnect->setChecked(false);
+    actionConnect->setChecked(false);
     currentTool = 2;
 }
 
@@ -121,6 +190,8 @@ void MainWindow::on_actionSelect_triggered()
     actionDeselect->setChecked(false);
     actionSelect->setChecked(true);
     actionErase->setChecked(false);
+    actionDisconnect->setChecked(false);
+    actionConnect->setChecked(false);
     currentTool = 3;
 }
 
@@ -130,9 +201,32 @@ void MainWindow::on_actionDeselect_triggered()
     actionDeselect->setChecked(true);
     actionSelect->setChecked(false);
     actionErase->setChecked(false);
+    actionDisconnect->setChecked(false);
+    actionConnect->setChecked(false);
     currentTool = 4;
 }
 
+void MainWindow::on_actionDisconnect_triggered()
+{
+    actionPaint->setChecked(false);
+    actionDeselect->setChecked(false);
+    actionSelect->setChecked(false);
+    actionErase->setChecked(false);
+    actionDisconnect->setChecked(true);
+    actionConnect->setChecked(false);
+    currentTool = 6;
+}
+
+void MainWindow::on_actionConnect_triggered()
+{
+    actionPaint->setChecked(false);
+    actionDeselect->setChecked(false);
+    actionSelect->setChecked(false);
+    actionErase->setChecked(false);
+    actionDisconnect->setChecked(false);
+    actionConnect->setChecked(true);
+    currentTool = 5;
+}
 
 //EVENT FILTER
 
@@ -173,6 +267,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
   else if (event->type() == QEvent::MouseButtonRelease)
   {
       QMouseEvent *mouseEvent = (QMouseEvent*)event;
+
+      //connect or disconnect
+      if (currentTool == 5) connectSelectedCells(true);
+      else if (currentTool == 6) connectSelectedCells(false);
+
       //restore original tool
       if (mouseEvent->button() == Qt::RightButton)
       {

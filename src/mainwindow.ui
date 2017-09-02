@@ -60,6 +60,8 @@
    <addaction name="actionDeselect"/>
    <addaction name="actionPaint"/>
    <addaction name="actionErase"/>
+   <addaction name="actionConnect"/>
+   <addaction name="actionDisconnect"/>
   </widget>
   <action name="actionPaint">
    <property name="checkable">
@@ -118,6 +120,34 @@
    </property>
    <property name="shortcut">
     <string>D</string>
+   </property>
+  </action>
+  <action name="actionDisconnect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disconnect</string>
+   </property>
+   <property name="toolTip">
+    <string>Disconnect selected cells (Ctrl + D)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionConnect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Connect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect selected cells (Shift + D)</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+D</string>
    </property>
   </action>
  </widget>
