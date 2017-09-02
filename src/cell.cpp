@@ -29,6 +29,7 @@ Cell::Cell(int r, int c, QWidget *parent) :
 
     label = new QLabel();
     label->setScaledContents(true);
+    label->setPixmap(QPixmap());
     mainLayout->addWidget(label);
 
     this->setStyleSheet("background-color: #fff;");
@@ -86,6 +87,11 @@ void Cell::setChecked(bool c)
 bool Cell::isSelected()
 {
     return selected;
+}
+
+const QPixmap *Cell::getPixmap()
+{
+    return label->pixmap();
 }
 
 void Cell::updatePixmap()

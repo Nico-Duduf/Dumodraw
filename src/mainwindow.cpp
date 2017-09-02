@@ -9,6 +9,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
+    //UI
+    exportForm = new ExportForm(mainLayout,this);
+    exportPage->layout()->addWidget(exportForm);
+    stackedWidget->setCurrentIndex(0);
+
     //INITIALIZE
     painting = false;
     currentTool = 1;
@@ -22,6 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
     //events
     mainWidget->installEventFilter(this);
 
+    mapEvents();
+}
+
+void MainWindow::mapEvents()
+{
+    connect(exportForm,SIGNAL(finished()),this,SLOT(exportFinished()));
+    connect(exportForm,SIGNAL(canceled()),this,SLOT(exportFinished()));
 }
 
 void MainWindow::createCells(int numRows, int numColumns)
@@ -159,6 +171,11 @@ void MainWindow::selectAll(bool c)
     }
 }
 
+void MainWindow::exportFinished()
+{
+    stackedWidget->setCurrentIndex(0);
+}
+
 //ACTIONS
 
 void MainWindow::on_actionPaint_triggered()
@@ -228,6 +245,14 @@ void MainWindow::on_actionConnect_triggered()
     currentTool = 5;
 }
 
+void MainWindow::on_actionExport_triggered()
+{
+    exportForm->setNumRows(mainLayout->rowCount());
+    exportForm->setNumColumns(mainLayout->columnCount());
+    exportForm->setDefaultBGColor(QColor("#ffffff"));
+    stackedWidget->setCurrentIndex(1);
+}
+
 //EVENT FILTER
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -288,3 +313,4 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
+

@@ -26,15 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     mainwindow.cpp \
-    cell.cpp
+    cell.cpp \
+    exportform.cpp
 
 HEADERS += \
     mainwindow.h \
-    cell.h
+    cell.h \
+    exportform.h
 
 FORMS += \
     mainwindow.ui \
-    cell.ui
+    cell.ui \
+    exportform.ui
 
 RESOURCES += \
     resources.qrc

@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 
 #include "cell.h"
+#include "exportform.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -20,12 +21,19 @@ private slots:
     void on_actionDeselect_triggered();
     void on_actionDisconnect_triggered();
     void on_actionConnect_triggered();
+    void on_actionExport_triggered();
+
+    void exportFinished();
 
 private:
+    ExportForm *exportForm;
+
     bool painting;
     Cell *currentCell;
     int currentTool;
     QList<Cell*> selectedCells;
+
+    void mapEvents();
 
     void clickCell(QPoint pos);
     void swapTool();

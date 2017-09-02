@@ -18,6 +18,7 @@ public:
     void setChecked(bool c);
     void setSelected(bool c);
     bool isSelected();
+    const QPixmap *getPixmap();
 
     int getRow();
     int getColumn();
