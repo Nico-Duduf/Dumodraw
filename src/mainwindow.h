@@ -22,7 +22,8 @@ private:
     bool painting;
     Cell *currentCell;
     int currentTool;
-    void swapCell(QPoint pos);
+    void clickCell(QPoint pos);
+    void swapTool();
     void createCells(int numRows, int numColumns);
     bool eventFilter(QObject *obj, QEvent *event);
 };

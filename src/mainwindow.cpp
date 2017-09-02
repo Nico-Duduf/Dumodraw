@@ -53,7 +53,7 @@ void MainWindow::createCells(int numRows, int numColumns)
     }
 }
 
-void MainWindow::swapCell(QPoint pos)
+void MainWindow::clickCell(QPoint pos)
 {
     //Get the widget
     Cell *cell = qobject_cast<Cell*>(qApp->widgetAt(pos)->parent());
@@ -64,6 +64,22 @@ void MainWindow::swapCell(QPoint pos)
         cell->swap(currentTool);
     }
 
+}
+
+void MainWindow::swapTool()
+{
+    if (currentTool == 1)
+    {
+        currentTool = 2;
+        actionErase->setChecked(true);
+        actionPaint->setChecked(false);
+    }
+    else if (currentTool == 2)
+    {
+        currentTool = 1;
+        actionErase->setChecked(false);
+        actionPaint->setChecked(true);
+    }
 }
 
 //ACTIONS
@@ -119,16 +135,21 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
   if (event->type() == QEvent::MouseButtonPress)
   {
       QMouseEvent *mouseEvent = (QMouseEvent*)event;
-      if (mouseEvent->button() == Qt::LeftButton)
+
+      //revert tool if right click
+      if (mouseEvent->button() == Qt::RightButton)
+      {
+          swapTool();
+      }
+
+      //send click to cell
+      if (mouseEvent->button() == Qt::LeftButton || mouseEvent->button() == Qt::RightButton)
       {
         painting = true;
-        if (mouseEvent->buttons() & Qt::LeftButton)
-        {
-            //Switch the cell under the cursor
-            swapCell(mouseEvent->globalPos());
-            event->accept();
-        }
+        clickCell(mouseEvent->globalPos());
+        event->accept();
       }
+
       return true;
   }
   else if (event->type() == QEvent::MouseMove)
@@ -136,17 +157,22 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     QMouseEvent *mouseEvent = (QMouseEvent*)event;
     if (mouseEvent->buttons())
     {
-        if (Qt::LeftButton)
-        {
-            //Switch the cell under the cursor
-            swapCell(mouseEvent->globalPos());
-        }
+        //send click to cell
+        if (painting) clickCell(mouseEvent->globalPos());
+
         event->accept();
     }
     return true;
   }
   else if (event->type() == QEvent::MouseButtonRelease)
   {
+      QMouseEvent *mouseEvent = (QMouseEvent*)event;
+      //restore original tool
+      if (mouseEvent->button() == Qt::RightButton)
+      {
+          swapTool();
+      }
+
       painting = false;
       currentCell = 0;
       return true;
