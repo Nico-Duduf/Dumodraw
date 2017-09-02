@@ -12,6 +12,22 @@ Cell::Cell(int r, int c, QWidget *parent) :
     row = r;
     column = c;
 
+    //add layout and widgets
+    QStackedLayout *mainLayout = new QStackedLayout();
+    mainLayout->setStackingMode(QStackedLayout::StackAll);
+    this->setLayout(mainLayout);
+
+    hoverLabel = new QLabel();
+    hoverLabel->setStyleSheet("QLabel { background-color: rgba(1,1,1,0); } QLabel:hover { background-color: rgba(113,1,50,50); border: 4px solid rgba(113,1,50,70); }");
+    mainLayout->addWidget(hoverLabel);
+
+    label = new QLabel();
+    label->setScaledContents(true);
+    mainLayout->addWidget(label);
+
+    mainLayout->setCurrentIndex(0);
+
+
     //initialize
     this->setStyleSheet("background-color: #fff;");
 

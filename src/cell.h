@@ -4,6 +4,8 @@
 #include "ui_cell.h"
 
 #include <QPainter>
+#include <QStackedLayout>
+#include <QLabel>
 
 class Cell : public QWidget, private Ui::Cell
 {
@@ -32,6 +34,9 @@ signals:
     void swapped(bool);
 
 private:
+    QLabel *label;
+    QLabel *hoverLabel;
+
     /**
      * @brief row The row containing this cell
      */

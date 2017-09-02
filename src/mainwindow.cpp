@@ -134,10 +134,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
   else if (event->type() == QEvent::MouseMove)
   {
     QMouseEvent *mouseEvent = (QMouseEvent*)event;
-    if (mouseEvent->buttons() & Qt::LeftButton)
+    if (mouseEvent->buttons())
     {
-        //Switch the cell under the cursor
-        swapCell(mouseEvent->globalPos());
+        if (Qt::LeftButton)
+        {
+            //Switch the cell under the cursor
+            swapCell(mouseEvent->globalPos());
+        }
         event->accept();
     }
     return true;
