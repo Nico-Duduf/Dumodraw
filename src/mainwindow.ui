@@ -56,9 +56,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionSelect"/>
+   <addaction name="actionDeselect"/>
    <addaction name="actionPaint"/>
    <addaction name="actionErase"/>
-   <addaction name="actionSwap"/>
   </widget>
   <action name="actionPaint">
    <property name="checkable">
@@ -71,7 +72,7 @@
     <string>Paint</string>
    </property>
    <property name="toolTip">
-    <string>Paint in cells</string>
+    <string>Paint in cells (Right click to erase) (P)</string>
    </property>
    <property name="shortcut">
     <string>P</string>
@@ -85,24 +86,38 @@
     <string>Erase</string>
    </property>
    <property name="toolTip">
-    <string>Erase in cells</string>
+    <string>Erase in cells (Right click to paint) (E)</string>
    </property>
    <property name="shortcut">
     <string>E</string>
    </property>
   </action>
-  <action name="actionSwap">
+  <action name="actionSelect">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Swap</string>
+    <string>Select</string>
    </property>
    <property name="toolTip">
-    <string>Swap cells</string>
+    <string>Select cells (Right click to deselect) (V)</string>
    </property>
    <property name="shortcut">
-    <string>S</string>
+    <string>V</string>
+   </property>
+  </action>
+  <action name="actionDeselect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Deselect</string>
+   </property>
+   <property name="toolTip">
+    <string>Deselect cells (Right click to select) (D)</string>
+   </property>
+   <property name="shortcut">
+    <string>D</string>
    </property>
   </action>
  </widget>

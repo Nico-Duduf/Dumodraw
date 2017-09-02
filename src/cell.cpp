@@ -8,9 +8,15 @@ Cell::Cell(int r, int c, QWidget *parent) :
     QWidget(parent)
 {
     setupUi(this);
+
+    //----- STATE ------
+
     checked = false;
+    selected = false;
     row = r;
     column = c;
+
+    //----- BUILD UI ------
 
     //add layout and widgets
     QStackedLayout *mainLayout = new QStackedLayout();
@@ -25,11 +31,9 @@ Cell::Cell(int r, int c, QWidget *parent) :
     label->setScaledContents(true);
     mainLayout->addWidget(label);
 
-    mainLayout->setCurrentIndex(0);
-
-
-    //initialize
     this->setStyleSheet("background-color: #fff;");
+
+    //------ NEIGHBOURS -------
 
     topLeft = false;
     top = false;
@@ -41,11 +45,26 @@ Cell::Cell(int r, int c, QWidget *parent) :
     left = false;
 }
 
-void Cell::swap(int currentTool)
+void Cell::click(int currentTool)
 {
     if (currentTool == 1) setChecked(true);
     else if (currentTool == 2) setChecked(false);
-    else if (currentTool == 3) setChecked(!checked);
+    else if (currentTool == 3) setSelected(true);
+    else if (currentTool == 4) setSelected(false);
+}
+
+void Cell::setSelected(bool c)
+{
+    if (c)
+    {
+        hoverLabel->setStyleSheet("QLabel { background-color: rgba(236,24,24,50); } QLabel:hover { background-color: rgba(113,1,50,50); border: 4px solid rgba(113,1,50,70); }");
+        selected = true;
+    }
+    else
+    {
+        hoverLabel->setStyleSheet("QLabel { background-color: rgba(236,24,24,0); } QLabel:hover { background-color: rgba(113,1,50,50); border: 4px solid rgba(113,1,50,70); }");
+        selected = false;
+    }
 }
 
 void Cell::setChecked(bool c)

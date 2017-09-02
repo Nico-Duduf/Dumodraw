@@ -14,9 +14,10 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
 private slots:
-    void on_actionPaint_triggered(bool checked);
-    void on_actionErase_triggered(bool checked);
-    void on_actionSwap_triggered(bool checked);
+    void on_actionPaint_triggered();
+    void on_actionErase_triggered();
+    void on_actionSelect_triggered();
+    void on_actionDeselect_triggered();
 
 private:
     bool painting;

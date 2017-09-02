@@ -14,7 +14,7 @@ class Cell : public QWidget, private Ui::Cell
 
 public:
     explicit Cell(int r, int c, QWidget *parent = 0);
-    void swap(int currentTool);
+    void click(int currentTool);
     void setChecked(bool c);
 
     int getRow();
@@ -34,8 +34,13 @@ signals:
     void swapped(bool);
 
 private:
+
+    //------ WIDGETS & UI ---------
+
     QLabel *label;
     QLabel *hoverLabel;
+
+    //------ STATE ---------
 
     /**
      * @brief row The row containing this cell
@@ -49,6 +54,12 @@ private:
      * @brief checked True if the cell is filled
      */
     bool checked;
+    /**
+     * @brief selected True if cell is selected
+     */
+    bool selected;
+
+    //------ NEIGHBOURS ---------
 
     bool topLeft;
     bool top;
@@ -59,12 +70,19 @@ private:
     bool bottomLeft;
     bool left;
 
+    //------ METHODS ---------
+
     void updatePixmap();
+    void setSelected(bool c);
+
+    //------ OPERATORS ---------
 
     bool operator ==(Cell *c);
     bool operator ==(Cell c);
     bool operator !=(Cell *c);
     bool operator !=(Cell c);
+
+    //------ EVENTS ---------
 
     /**
      * @brief paintEvent Reimplements the paintEvent which is not implemented in QWidget

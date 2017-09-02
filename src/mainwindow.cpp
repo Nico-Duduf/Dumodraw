@@ -61,7 +61,7 @@ void MainWindow::clickCell(QPoint pos)
     if (currentCell != cell)
     {
         currentCell = cell;
-        cell->swap(currentTool);
+        cell->click(currentTool);
     }
 
 }
@@ -80,53 +80,59 @@ void MainWindow::swapTool()
         actionErase->setChecked(false);
         actionPaint->setChecked(true);
     }
+    else if (currentTool == 3)
+    {
+        currentTool = 4;
+        actionSelect->setChecked(false);
+        actionDeselect->setChecked(true);
+    }
+    else if (currentTool == 4)
+    {
+        currentTool = 3;
+        actionSelect->setChecked(true);
+        actionDeselect->setChecked(false);
+    }
 }
 
 //ACTIONS
 
-void MainWindow::on_actionPaint_triggered(bool checked)
+void MainWindow::on_actionPaint_triggered()
 {
- if (checked)
- {
-     actionErase->setChecked(false);
-     actionSwap->setChecked(false);
- }
- else
- {
-     actionPaint->setChecked(true);
- }
- currentTool = 1;
+    actionPaint->setChecked(true);
+    actionDeselect->setChecked(false);
+    actionSelect->setChecked(false);
+    actionErase->setChecked(false);
+    currentTool = 1;
 }
 
-void MainWindow::on_actionErase_triggered(bool checked)
+void MainWindow::on_actionErase_triggered()
 {
-    if (checked)
-    {
-        actionPaint->setChecked(false);
-        actionSwap->setChecked(false);
-        currentTool = 2;
-    }
-    else
-    {
-        actionPaint->setChecked(true);
-        currentTool = 1;
-    }
+
+    actionPaint->setChecked(false);
+    actionDeselect->setChecked(false);
+    actionSelect->setChecked(false);
+    actionErase->setChecked(true);
+    currentTool = 2;
 }
 
-void MainWindow::on_actionSwap_triggered(bool checked)
+void MainWindow::on_actionSelect_triggered()
 {
-    if (checked)
-    {
-        actionErase->setChecked(false);
-        actionPaint->setChecked(false);
-        currentTool = 3;
-    }
-    else
-    {
-        actionPaint->setChecked(true);
-        currentTool = 1;
-    }
+    actionPaint->setChecked(false);
+    actionDeselect->setChecked(false);
+    actionSelect->setChecked(true);
+    actionErase->setChecked(false);
+    currentTool = 3;
 }
+
+void MainWindow::on_actionDeselect_triggered()
+{
+    actionPaint->setChecked(false);
+    actionDeselect->setChecked(true);
+    actionSelect->setChecked(false);
+    actionErase->setChecked(false);
+    currentTool = 4;
+}
+
 
 //EVENT FILTER
 
@@ -183,4 +189,3 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
-
