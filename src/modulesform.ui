@@ -106,7 +106,27 @@
          <widget class="QComboBox" name="includedComboBox">
           <item>
            <property name="text">
-            <string>(Default)</string>
+            <string>Colorful (Default)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Simple</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Double</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Angle</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Oblique</string>
            </property>
           </item>
          </widget>
@@ -146,5 +166,102 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>includedButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>browseButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>244</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>includedButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>exportButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>includedButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>includedComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>customButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>browseButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>244</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>customButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>exportButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>customButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>includedComboBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

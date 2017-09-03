@@ -18,7 +18,23 @@ void ModulesForm::on_okButton_clicked()
     {
         if (includedComboBox->currentIndex() == 0)
         {
-            path = ":/default module";
+            path = ":/module/default";
+        }
+        if (includedComboBox->currentIndex() == 1)
+        {
+            path = ":/module/simple";
+        }
+        if (includedComboBox->currentIndex() == 2)
+        {
+            path = ":/module/double";
+        }
+        if (includedComboBox->currentIndex() == 3)
+        {
+            path = ":/module/angle";
+        }
+        if (includedComboBox->currentIndex() == 4)
+        {
+            path = ":/module/oblique";
         }
     }
     else
