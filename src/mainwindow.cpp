@@ -209,7 +209,6 @@ void MainWindow::createCell(int row, int col, QColor backgroundColor)
     //connections, to the left and the top cells
     if (col > 0)
     {
-        QLayoutItem *item = mainLayout->itemAtPosition(row,col-1);
         Cell *cellLeft = qobject_cast<Cell*>(mainLayout->itemAtPosition(row,col-1)->widget());
         connect(cell,SIGNAL(swapped(bool)),cellLeft,SLOT(setRight(bool)));
         connect(cellLeft,SIGNAL(swapped(bool)),cell,SLOT(setLeft(bool)));
@@ -390,8 +389,6 @@ void MainWindow::projectSettingsChanged()
     createCells(projectForm->numRows(),projectForm->numColumns(),projectForm->BGColor());
 
     //background
-    //check first cell color
-    Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(0)->widget());
     //only if the color has changed
     if (backgroundColor != projectForm->BGColor())
     {
