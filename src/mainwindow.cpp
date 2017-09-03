@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
+    mainLayout = new QGridLayout;
+
     //UI
     //App Layout
     stackedLayout = new QStackedLayout();
@@ -32,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Grid
     gridWidget = new QWidget(this);
-    mainLayout = new QGridLayout;
     mainLayout->setMargin(0);
     gridWidget->setLayout(mainLayout);
     //set grid color and size
@@ -50,13 +51,14 @@ MainWindow::MainWindow(QWidget *parent) :
         pixmaps << new QPixmap();
     }
     //load default
-    loadModule(":/default module");
+    loadModule(":/module/default");
 
     //show grid
     mainLayout->setSpacing(1);
 
     //create default cells (seems to be a maximum at 3600 cells)
-    createCells(15,15);
+    backgroundColor = QColor("#ffffff");
+    createCells(15,15,backgroundColor);
 
     //events
     mainWidget->installEventFilter(this);
@@ -92,7 +94,7 @@ void MainWindow::loadModule(QString path)
             bool found = false;
             foreach (QString file,files)
             {
-               if (file.startsWith(QString::number(i) + "."))
+               if (file.startsWith(dir.dirName() + "_" + QString::number(i) + "."))
                {
                    found = true;
                    break;
@@ -115,10 +117,14 @@ void MainWindow::loadModule(QString path)
         }
     }
 
+    //set name
+    QString name = "";
+    if (!path.startsWith(":/")) name = dir.dirName() + "_";
+
     //load images
     for (int i = 0 ; i < 16 ; i++)
     {
-        pixmaps[i]->load(path + QString::number(i) + extension);
+        pixmaps[i]->load(path + name + QString::number(i) + extension);
     }
 
     //update cells
@@ -141,7 +147,7 @@ void MainWindow::createCells(int numRows, int numColumns, QColor backgroundColor
     if (numRows < rowCount)
     {
 
-        for (int row = mainLayout->rowCount()-1 ; row >= numRows ; row-- )
+        for (int row = rowCount-1 ; row >= numRows ; row-- )
         {
             removeLine(row,-1);
             rowCount--;
@@ -151,7 +157,7 @@ void MainWindow::createCells(int numRows, int numColumns, QColor backgroundColor
     //if less columns, delete
     if (numColumns < columnCount)
     {
-        for (int col = mainLayout->columnCount()-1 ; col >= numColumns ; col-- )
+        for (int col = columnCount-1 ; col >= numColumns ; col-- )
         {
             removeLine(-1,col);
             columnCount--;
@@ -335,19 +341,19 @@ void MainWindow::connectSelectedCells(bool c)
             if (top->isSelected()) cell->setTop(c);
         }
         //right
-        if (cell->getRow() < mainLayout->rowCount()-1)
+        if (cell->getColumn() < columnCount-1)
         {
             Cell *right = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow(),cell->getColumn()+1)->widget());
             if (right->isSelected()) cell->setRight(c);
         }
         //bottom
-        if (cell->getColumn() < mainLayout->columnCount()-1)
+        if (cell->getRow() < rowCount-1)
         {
             Cell *bottom = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow()+1,cell->getColumn())->widget());
             if (bottom->isSelected()) cell->setBottom(c);
         }
         //left
-        if (cell->getRow() > 0)
+        if (cell->getColumn() > 0)
         {
             Cell *left = qobject_cast<Cell*>(mainLayout->itemAtPosition(cell->getRow(),cell->getColumn()-1)->widget());
             if (left->isSelected()) cell->setLeft(c);
@@ -386,7 +392,6 @@ void MainWindow::projectSettingsChanged()
     //background
     //check first cell color
     Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(0)->widget());
-    QColor backgroundColor = cell->getBackgroundColor();
     //only if the color has changed
     if (backgroundColor != projectForm->BGColor())
     {
@@ -395,6 +400,7 @@ void MainWindow::projectSettingsChanged()
             Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(i)->widget());
             cell->setBackgroundColor(projectForm->BGColor());
         }
+        backgroundColor = projectForm->BGColor();
     }
 
     projectForm->hide();
@@ -482,9 +488,11 @@ void MainWindow::on_actionConnect_triggered()
 
 void MainWindow::on_actionExport_triggered()
 {
-    exportForm->setNumRows(mainLayout->rowCount());
-    exportForm->setNumColumns(mainLayout->columnCount());
-    exportForm->setDefaultBGColor(QColor("#ffffff"));
+    exportForm->setNumRows(rowCount);
+    exportForm->setNumColumns(columnCount);
+    exportForm->setBackgroundColor(backgroundColor);
+    exportForm->setWidth(pixmaps[0]->width());
+    exportForm->setHeight(pixmaps[0]->height());
 
     showExportForm();
 }

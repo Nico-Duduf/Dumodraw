@@ -1,59 +1,74 @@
 #include "exportform.h"
 
-ExportForm::ExportForm(QGridLayout *l, QWidget *parent) :
+ExportForm::ExportForm(QGridLayout *l,QWidget *parent) :
     QWidget(parent)
 {
     setupUi(this);
-    numColumns = 10;
-    numRows = 10;
+    numColumns = 15;
+    numRows = 15;
     layout = l;
+    width = 50;
+    height = 50;
+    backgroundColor = QColor("#ffffff");
 }
 
 void ExportForm::setNumColumns(int n)
 {
     numColumns = n;
-    if (exportSettingsComboBox->currentIndex() == 0)
-    {
-        on_exportSettingsComboBox_currentIndexChanged(0);
-    }
+    exportSettingsComboBox->setCurrentIndex(0);
+    on_exportSettingsComboBox_currentIndexChanged(0);
 }
 
 void ExportForm::setNumRows(int n)
 {
     numRows = n;
-    if (exportSettingsComboBox->currentIndex() == 0)
-    {
-        on_exportSettingsComboBox_currentIndexChanged(0);
-    }
+    exportSettingsComboBox->setCurrentIndex(0);
+    on_exportSettingsComboBox_currentIndexChanged(0);
 }
 
-void ExportForm::setDefaultBGColor(QColor c)
+void ExportForm::setBackgroundColor(QColor c)
 {
-    defaultBGColor = c;
+    backgroundColor = c;
+    exportSettingsComboBox->setCurrentIndex(0);
+    on_exportSettingsComboBox_currentIndexChanged(0);
+}
+
+void ExportForm::setWidth(int w)
+{
+    width = w;
+    exportSettingsComboBox->setCurrentIndex(0);
+    on_exportSettingsComboBox_currentIndexChanged(0);
+}
+
+void ExportForm::setHeight(int h)
+{
+    height = h;
+    exportSettingsComboBox->setCurrentIndex(0);
+    on_exportSettingsComboBox_currentIndexChanged(0);
 }
 
 void ExportForm::on_exportButton_clicked()
 {
-    QString saveFileName = QFileDialog::getSaveFileName(this,"Export image to...","","Windows Bitmap (*.bmp);;Joint Photographic Experts Group (*.jpg *.jpeg);;Portable Network Graphics (*.png);;Portable Pixmap (*.ppm);;X11 Bitmap (*.xbm *.xpm)");
+    QString saveFileName = QFileDialog::getSaveFileName(this,"Export image to...","","Portable Network Graphics (*.png);;Joint Photographic Experts Group (*.jpg *.jpeg);;Windows Bitmap (*.bmp);;Portable Pixmap (*.ppm);;X11 Bitmap (*.xbm *.xpm)");
     if (saveFileName == "") return;
 
     //size
-    int width = widthEdit->value();
-    int height = heightEdit->value();
-    int rowSize = height/layout->columnCount();
-    int columnSize = width/layout->rowCount();
+    int totalWidth = widthEdit->value();
+    int totalHeight = heightEdit->value();
+    int rowSize = totalHeight/numColumns;
+    int columnSize = totalWidth/numRows;
 
     //create image
-    QImage image(width,height,QImage::Format_ARGB32);
+    QImage image(totalWidth,totalHeight,QImage::Format_ARGB32);
     QPainter painter(&image);
-    if (transparentCheckBox->isChecked()) painter.fillRect(0,0,width,height,QColor(0,0,0,0));
-    else painter.fillRect(0,0,width,height,QColor(BGColorEdit->text()));
+    if (transparentCheckBox->isChecked()) painter.fillRect(0,0,totalWidth,totalHeight,QColor(0,0,0,0));
+    else painter.fillRect(0,0,totalWidth,totalHeight,QColor(BGColorEdit->text()));
 
     //check each cell
     for (int i = 0 ; i < layout->count() ; i++)
     {
         Cell *cell = qobject_cast<Cell*>(layout->itemAt(i)->widget());
-        painter.drawPixmap(cell->getColumn()*columnSize,cell->getRow()*rowSize,columnSize,rowSize,*cell->getPixmap());
+        painter.drawPixmap(cell->getColumn()*columnSize,cell->getRow()*rowSize,rowSize,columnSize,*cell->getPixmap());//,width,height
     }
 
     //save image
@@ -72,14 +87,14 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
 {
     if (index == 0) //Auto
     {
-        //get from modules
-        QImage test(":/0");
-        widthEdit->setValue(numColumns*test.width());
-        heightEdit->setValue(numRows*test.height());
+        QString colorName = backgroundColor.name();
+
+        widthEdit->setValue(numColumns*width);
+        heightEdit->setValue(numRows*height);
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(colorName);
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 1) //Custom
@@ -93,7 +108,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 3) //Letter (DL)
@@ -103,7 +118,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 4) //PostCard
@@ -113,7 +128,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 5) //Business Card
@@ -123,7 +138,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 6) //A3
@@ -133,7 +148,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 7) //A4
@@ -143,7 +158,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 8) //A5
@@ -153,7 +168,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 9) //A6
@@ -163,7 +178,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 10) //Square 1000
@@ -173,7 +188,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 11) //Square 2000
@@ -183,7 +198,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(300);
         transparentCheckBox->setChecked(false);
         BGColorEdit->setEnabled(true);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 12) //DCI 8K
@@ -193,7 +208,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 13) //HD 8K
@@ -203,7 +218,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 14) //DCI 4K Scope
@@ -213,7 +228,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 15) //DCI 4K Flat
@@ -223,7 +238,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 16) //HD 4K
@@ -233,7 +248,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 17) //DCI 2K Scope
@@ -243,7 +258,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 18) //DCI 2K Flat
@@ -253,7 +268,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 19) //1080
@@ -263,7 +278,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
     else if (index  == 20) //720
@@ -273,7 +288,7 @@ void ExportForm::on_exportSettingsComboBox_currentIndexChanged(int index)
         definitionEdit->setValue(72);
         transparentCheckBox->setChecked(true);
         BGColorEdit->setEnabled(false);
-        BGColorEdit->setText(defaultBGColor.name());
+        BGColorEdit->setText(backgroundColor.name());
         colorsComboBox->setCurrentIndex(2);
     }
 }

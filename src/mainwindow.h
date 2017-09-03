@@ -50,6 +50,7 @@ private:
     int columnCount;
 
     QList<QPixmap*> pixmaps;
+    QColor backgroundColor;
 
     void mapEvents();
 

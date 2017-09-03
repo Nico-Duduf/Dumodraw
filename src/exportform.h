@@ -16,7 +16,9 @@ public:
     explicit ExportForm(QGridLayout *l, QWidget *parent = 0);
     void setNumColumns(int n);
     void setNumRows(int n);
-    void setDefaultBGColor(QColor c);
+    void setBackgroundColor(QColor c);
+    void setWidth(int w);
+    void setHeight(int h);
 
 signals:
     void finished();
@@ -32,7 +34,9 @@ private slots:
 private:
     int numColumns;
     int numRows;
-    QColor defaultBGColor;
+    QColor backgroundColor;
+    int width;
+    int height;
     QGridLayout *layout;
 
 
