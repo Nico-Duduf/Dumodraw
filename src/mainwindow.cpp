@@ -12,11 +12,17 @@ MainWindow::MainWindow(QWidget *parent) :
     //UI
     exportForm = new ExportForm(mainLayout,this);
     exportPage->layout()->addWidget(exportForm);
+
+    projectForm = new ProjectForm(this);
+    projectPage->layout()->addWidget(projectForm);
+
     stackedWidget->setCurrentIndex(0);
 
     //INITIALIZE
     painting = false;
     currentTool = 1;
+    rowCount = 0;
+    columnCount = 0;
 
     //show grid
     mainLayout->setSpacing(1);
@@ -34,34 +40,112 @@ void MainWindow::mapEvents()
 {
     connect(exportForm,SIGNAL(finished()),this,SLOT(exportFinished()));
     connect(exportForm,SIGNAL(canceled()),this,SLOT(exportFinished()));
+    connect(projectForm,SIGNAL(ok()),this,SLOT(projectSettingsChanged()));
+    connect(projectForm,SIGNAL(cancel()),this,SLOT(projectSettingsCancelled()));
 }
 
-void MainWindow::createCells(int numRows, int numColumns)
+void MainWindow::createCells(int numRows, int numColumns, QColor backgroundColor)
 {
-    //add cells
-    QList<Cell*> rowBefore;
-    for (int row = 0; row < numRows; row++)
-    { 
-        QList<Cell*> currentRow;
-        for (int col = 0; col < numColumns; col++)
-        {
-            Cell *cell = new Cell(row,col);
-            mainLayout->addWidget(cell,row,col);
-            currentRow << cell;
-            //connections
-            if (col > 0)
-            {
-                connect(cell,SIGNAL(swapped(bool)),currentRow[col-1],SLOT(setRight(bool)));
-                connect(currentRow[col-1],SIGNAL(swapped(bool)),cell,SLOT(setLeft(bool)));
-            }
-            if (row > 0)
-            {
-                connect(cell,SIGNAL(swapped(bool)),rowBefore[col],SLOT(setBottom(bool)));
-                connect(rowBefore[col],SIGNAL(swapped(bool)),cell,SLOT(setTop(bool)));
-            }
+    //if cells are going to be removed, alert
+    if (numRows < rowCount || numColumns < columnCount)
+    {
+        //TODO Alert
+    }
 
+    //if less rows, delete
+    if (numRows < rowCount)
+    {
+
+        for (int row = mainLayout->rowCount()-1 ; row >= numRows ; row-- )
+        {
+            removeLine(row,-1);
+            rowCount--;
         }
-        rowBefore = currentRow;
+    }
+
+    //if less columns, delete
+    if (numColumns < columnCount)
+    {
+        for (int col = mainLayout->columnCount()-1 ; col >= numColumns ; col-- )
+        {
+            removeLine(-1,col);
+            columnCount--;
+        }
+    }
+
+    //if first cell, create it
+    if (rowCount == 0 && columnCount == 0)
+    {
+        createCell(0,0,backgroundColor);
+        rowCount = 1;
+        columnCount = 1;
+    }
+
+    //if more columns, create
+    if (numColumns > columnCount)
+    {
+        for (int col = columnCount; col < numColumns; col++)
+        {
+            for (int row = 0; row < rowCount; row++)
+            {
+                createCell(row,col,backgroundColor);
+            }
+            columnCount++;
+        }
+    }
+
+    //if more rows, create
+    if (numRows > rowCount)
+    {
+        for (int row = rowCount; row < numRows; row++)
+        {
+            for (int col = 0; col < columnCount; col++)
+            {
+                createCell(row,col,backgroundColor);
+            }
+            rowCount++;
+        }
+    }
+}
+
+void MainWindow::createCell(int row, int col, QColor backgroundColor)
+{
+    //create cell
+    Cell *cell = new Cell(row,col,backgroundColor);
+    mainLayout->addWidget(cell,row,col);
+
+
+    //connections, to the left and the top cells
+    if (col > 0)
+    {
+        QLayoutItem *item = mainLayout->itemAtPosition(row,col-1);
+        Cell *cellLeft = qobject_cast<Cell*>(mainLayout->itemAtPosition(row,col-1)->widget());
+        connect(cell,SIGNAL(swapped(bool)),cellLeft,SLOT(setRight(bool)));
+        connect(cellLeft,SIGNAL(swapped(bool)),cell,SLOT(setLeft(bool)));
+    }
+
+    if (row > 0)
+    {
+        Cell *cellTop = qobject_cast<Cell*>(mainLayout->itemAtPosition(row-1,col)->widget());
+        connect(cell,SIGNAL(swapped(bool)),cellTop,SLOT(setBottom(bool)));
+        connect(cellTop,SIGNAL(swapped(bool)),cell,SLOT(setTop(bool)));
+    }
+
+}
+
+void MainWindow::removeLine(int row, int column, bool deleteWidgets) {
+    // We avoid usage of QGridLayout::itemAtPosition() here to improve performance.
+    for (int i = mainLayout->count() - 1; i >= 0; i--) {
+        int r, c, rs, cs;
+        mainLayout->getItemPosition(i, &r, &c, &rs, &cs);
+        if ((r <= row && r + rs - 1 >= row) || (c <= column && c + cs - 1 >= column)) {
+            // This layout item is subject to deletion.
+            QLayoutItem *item = mainLayout->takeAt(i);
+            if (deleteWidgets) {
+                delete item->widget();
+            }
+            delete item;
+        }
     }
 }
 
@@ -176,6 +260,33 @@ void MainWindow::exportFinished()
     stackedWidget->setCurrentIndex(0);
 }
 
+void MainWindow::projectSettingsCancelled()
+{
+    stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::projectSettingsChanged()
+{
+    //cells
+    createCells(projectForm->numRows(),projectForm->numColumns(),projectForm->BGColor());
+
+    //background
+    //check first cell color
+    Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(0)->widget());
+    QColor backgroundColor = cell->getBackgroundColor();
+    //only if the color has changed
+    if (backgroundColor != projectForm->BGColor())
+    {
+        for (int i = 0 ; i < mainLayout->count() ; i++)
+        {
+            Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(i)->widget());
+            cell->setBackgroundColor(projectForm->BGColor());
+        }
+    }
+
+    stackedWidget->setCurrentIndex(0);
+}
+
 //ACTIONS
 
 void MainWindow::on_actionPaint_triggered()
@@ -253,6 +364,11 @@ void MainWindow::on_actionExport_triggered()
     stackedWidget->setCurrentIndex(1);
 }
 
+void MainWindow::on_actionProject_settings_triggered()
+{
+    stackedWidget->setCurrentIndex(2);
+}
+
 //EVENT FILTER
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -313,4 +429,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
+
+
 

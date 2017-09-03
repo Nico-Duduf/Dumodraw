@@ -13,10 +13,12 @@ class Cell : public QWidget, private Ui::Cell
 
 
 public:
-    explicit Cell(int r, int c, QWidget *parent = 0);
+    explicit Cell(int r, int c, QColor backgroundColor = QColor("#ffffff"), QWidget *parent = 0);
     void click(int currentTool);
     void setChecked(bool c);
     void setSelected(bool c);
+    void setBackgroundColor(QColor c);
+    QColor getBackgroundColor();
     bool isSelected();
     const QPixmap *getPixmap();
 
@@ -61,6 +63,10 @@ private:
      * @brief selected True if cell is selected
      */
     bool selected;
+    /**
+     * @brief background The color of empty cells
+     */
+    QColor background;
 
     //------ NEIGHBOURS ---------
 

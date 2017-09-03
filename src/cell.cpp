@@ -4,7 +4,7 @@
 #include <QtDebug>
 #endif
 
-Cell::Cell(int r, int c, QWidget *parent) :
+Cell::Cell(int r, int c, QColor backgroundColor, QWidget *parent) :
     QWidget(parent)
 {
     setupUi(this);
@@ -15,6 +15,7 @@ Cell::Cell(int r, int c, QWidget *parent) :
     selected = false;
     row = r;
     column = c;
+    background = c;
 
     //----- BUILD UI ------
 
@@ -32,7 +33,7 @@ Cell::Cell(int r, int c, QWidget *parent) :
     label->setPixmap(QPixmap());
     mainLayout->addWidget(label);
 
-    this->setStyleSheet("background-color: #fff;");
+    this->setStyleSheet("background-color: " + backgroundColor.name() + ";");
 
     //------ NEIGHBOURS -------
 
@@ -68,17 +69,26 @@ void Cell::setSelected(bool c)
     }
 }
 
+void Cell::setBackgroundColor(QColor c)
+{
+    this->setStyleSheet("background-color: " + c.name() + ";");
+    background = c;
+}
+
+QColor Cell::getBackgroundColor()
+{
+    return background;
+}
+
 void Cell::setChecked(bool c)
 {
     if (c)
     {
         checked = true;
-        this->setStyleSheet("background-color: #000;");
     }
     else
     {
         checked = false;
-        this->setStyleSheet("background-color: #fff;");
     }
     updatePixmap();
     emit swapped(checked);

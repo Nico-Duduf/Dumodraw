@@ -27,17 +27,20 @@ SOURCES += \
         main.cpp \
     mainwindow.cpp \
     cell.cpp \
-    exportform.cpp
+    exportform.cpp \
+    projectform.cpp
 
 HEADERS += \
     mainwindow.h \
     cell.h \
-    exportform.h
+    exportform.h \
+    projectform.h
 
 FORMS += \
     mainwindow.ui \
     cell.ui \
-    exportform.ui
+    exportform.ui \
+    projectform.ui
 
 RESOURCES += \
     resources.qrc
