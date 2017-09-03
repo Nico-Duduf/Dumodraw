@@ -30,3 +30,10 @@ void ProjectForm::on_cancelButton_clicked()
 {
     emit cancel();
 }
+
+void ProjectForm::paintEvent(QPaintEvent *) {
+     QStyleOption opt;
+     opt.init(this);
+     QPainter p(this);
+     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+ }

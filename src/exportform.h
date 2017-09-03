@@ -34,6 +34,9 @@ private:
     int numRows;
     QColor defaultBGColor;
     QGridLayout *layout;
+
+
+    void paintEvent(QPaintEvent *);
 };
 
 #endif // EXPORTFORM_H

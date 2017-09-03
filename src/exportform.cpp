@@ -287,3 +287,10 @@ void ExportForm::on_transparentCheckBox_clicked(bool checked)
 {
     BGColorEdit->setEnabled(!checked);
 }
+
+void ExportForm::paintEvent(QPaintEvent *) {
+     QStyleOption opt;
+     opt.init(this);
+     QPainter p(this);
+     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+ }

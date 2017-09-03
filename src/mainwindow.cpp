@@ -10,13 +10,30 @@ MainWindow::MainWindow(QWidget *parent) :
     setupUi(this);
 
     //UI
+    //App Layout
+    stackedLayout = new QStackedLayout();
+    stackedLayout->setStackingMode(QStackedLayout::StackAll);
+    mainWidget->setLayout(stackedLayout);
+
+    //Export Form
     exportForm = new ExportForm(mainLayout,this);
-    exportPage->layout()->addWidget(exportForm);
+    stackedLayout->addWidget(exportForm);
+    exportForm->hide();
 
+    //Project Form
     projectForm = new ProjectForm(this);
-    projectPage->layout()->addWidget(projectForm);
+    stackedLayout->addWidget(projectForm);
+    projectForm->hide();
 
-    stackedWidget->setCurrentIndex(0);
+    //Grid
+    gridWidget = new QWidget(this);
+    mainLayout = new QGridLayout;
+    mainLayout->setMargin(0);
+    gridWidget->setLayout(mainLayout);
+    //set grid color and size
+    gridWidget->setStyleSheet("background-color: #bbb;");
+    mainLayout->setSpacing(1);
+    stackedLayout->addWidget(gridWidget);
 
     //INITIALIZE
     painting = false;
@@ -149,6 +166,24 @@ void MainWindow::removeLine(int row, int column, bool deleteWidgets) {
     }
 }
 
+void MainWindow::showProjectForm()
+{
+    projectForm->show();
+    exportForm->hide();
+}
+
+void MainWindow::showExportForm()
+{
+    projectForm->hide();
+    exportForm->show();
+}
+
+void MainWindow::showGrid()
+{
+    projectForm->hide();
+    exportForm->hide();
+}
+
 void MainWindow::clickCell(QPoint pos)
 {
     //Get the widget
@@ -257,12 +292,12 @@ void MainWindow::selectAll(bool c)
 
 void MainWindow::exportFinished()
 {
-    stackedWidget->setCurrentIndex(0);
+    exportForm->hide();
 }
 
 void MainWindow::projectSettingsCancelled()
 {
-    stackedWidget->setCurrentIndex(0);
+    projectForm->hide();
 }
 
 void MainWindow::projectSettingsChanged()
@@ -284,7 +319,7 @@ void MainWindow::projectSettingsChanged()
         }
     }
 
-    stackedWidget->setCurrentIndex(0);
+    projectForm->hide();
 }
 
 //ACTIONS
@@ -361,12 +396,13 @@ void MainWindow::on_actionExport_triggered()
     exportForm->setNumRows(mainLayout->rowCount());
     exportForm->setNumColumns(mainLayout->columnCount());
     exportForm->setDefaultBGColor(QColor("#ffffff"));
-    stackedWidget->setCurrentIndex(1);
+
+    showExportForm();
 }
 
 void MainWindow::on_actionProject_settings_triggered()
 {
-    stackedWidget->setCurrentIndex(2);
+    showProjectForm();
 }
 
 //EVENT FILTER
