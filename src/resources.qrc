@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/"/>
-    <qresource prefix="/default module">
+    <qresource prefix="/module/default">
         <file alias="0">resources/test images/0.png</file>
         <file alias="1">resources/test images/1.png</file>
         <file alias="2">resources/test images/2.png</file>
@@ -17,5 +17,77 @@
         <file alias="13">resources/test images/13.png</file>
         <file alias="14">resources/test images/14.png</file>
         <file alias="15">resources/test images/15.png</file>
+    </qresource>
+    <qresource prefix="/module/angle">
+        <file alias="0">resources/modules/angle/angle_0.png</file>
+        <file alias="1">resources/modules/angle/angle_1.png</file>
+        <file alias="2">resources/modules/angle/angle_2.png</file>
+        <file alias="3">resources/modules/angle/angle_3.png</file>
+        <file alias="4">resources/modules/angle/angle_4.png</file>
+        <file alias="5">resources/modules/angle/angle_5.png</file>
+        <file alias="6">resources/modules/angle/angle_6.png</file>
+        <file alias="7">resources/modules/angle/angle_7.png</file>
+        <file alias="8">resources/modules/angle/angle_8.png</file>
+        <file alias="9">resources/modules/angle/angle_9.png</file>
+        <file alias="10">resources/modules/angle/angle_10.png</file>
+        <file alias="11">resources/modules/angle/angle_11.png</file>
+        <file alias="12">resources/modules/angle/angle_12.png</file>
+        <file alias="13">resources/modules/angle/angle_13.png</file>
+        <file alias="14">resources/modules/angle/angle_14.png</file>
+        <file alias="15">resources/modules/angle/angle_15.png</file>
+    </qresource>
+    <qresource prefix="/module/double">
+        <file alias="0">resources/modules/double/double_0.png</file>
+        <file alias="1">resources/modules/double/double_1.png</file>
+        <file alias="2">resources/modules/double/double_2.png</file>
+        <file alias="3">resources/modules/double/double_3.png</file>
+        <file alias="4">resources/modules/double/double_4.png</file>
+        <file alias="5">resources/modules/double/double_5.png</file>
+        <file alias="6">resources/modules/double/double_6.png</file>
+        <file alias="7">resources/modules/double/double_7.png</file>
+        <file alias="8">resources/modules/double/double_8.png</file>
+        <file alias="9">resources/modules/double/double_9.png</file>
+        <file alias="10">resources/modules/double/double_10.png</file>
+        <file alias="11">resources/modules/double/double_11.png</file>
+        <file alias="12">resources/modules/double/double_12.png</file>
+        <file alias="13">resources/modules/double/double_13.png</file>
+        <file alias="14">resources/modules/double/double_14.png</file>
+        <file alias="15">resources/modules/double/double_15.png</file>
+    </qresource>
+    <qresource prefix="/module/oblique">
+        <file alias="0">resources/modules/oblique/oblique_0.png</file>
+        <file alias="1">resources/modules/oblique/oblique_1.png</file>
+        <file alias="2">resources/modules/oblique/oblique_2.png</file>
+        <file alias="3">resources/modules/oblique/oblique_3.png</file>
+        <file alias="4">resources/modules/oblique/oblique_4.png</file>
+        <file alias="5">resources/modules/oblique/oblique_5.png</file>
+        <file alias="6">resources/modules/oblique/oblique_6.png</file>
+        <file alias="7">resources/modules/oblique/oblique_7.png</file>
+        <file alias="8">resources/modules/oblique/oblique_8.png</file>
+        <file alias="9">resources/modules/oblique/oblique_9.png</file>
+        <file alias="10">resources/modules/oblique/oblique_10.png</file>
+        <file alias="11">resources/modules/oblique/oblique_11.png</file>
+        <file alias="12">resources/modules/oblique/oblique_12.png</file>
+        <file alias="13">resources/modules/oblique/oblique_13.png</file>
+        <file alias="14">resources/modules/oblique/oblique_14.png</file>
+        <file alias="15">resources/modules/oblique/oblique_15.png</file>
+    </qresource>
+    <qresource prefix="/module/simple">
+        <file alias="0">resources/modules/simple/simple_0.png</file>
+        <file alias="1">resources/modules/simple/simple_1.png</file>
+        <file alias="2">resources/modules/simple/simple_2.png</file>
+        <file alias="3">resources/modules/simple/simple_3.png</file>
+        <file alias="4">resources/modules/simple/simple_4.png</file>
+        <file alias="5">resources/modules/simple/simple_5.png</file>
+        <file alias="6">resources/modules/simple/simple_6.png</file>
+        <file alias="7">resources/modules/simple/simple_7.png</file>
+        <file alias="8">resources/modules/simple/simple_8.png</file>
+        <file alias="9">resources/modules/simple/simple_9.png</file>
+        <file alias="10">resources/modules/simple/simple_10.png</file>
+        <file alias="11">resources/modules/simple/simple_11.png</file>
+        <file alias="12">resources/modules/simple/simple_12.png</file>
+        <file alias="13">resources/modules/simple/simple_13.png</file>
+        <file alias="14">resources/modules/simple/simple_14.png</file>
+        <file alias="15">resources/modules/simple/simple_15.png</file>
     </qresource>
 </RCC>
