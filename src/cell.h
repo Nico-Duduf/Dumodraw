@@ -13,7 +13,7 @@ class Cell : public QWidget, private Ui::Cell
 
 
 public:
-    explicit Cell(int r, int c, QColor backgroundColor = QColor("#ffffff"), QWidget *parent = 0);
+    explicit Cell(int r, int c,QList<QPixmap*> pix, QColor backgroundColor = QColor("#ffffff"), QWidget *parent = 0);
     void click(int currentTool);
     void setChecked(bool c);
     void setSelected(bool c);
@@ -34,6 +34,8 @@ public slots:
     void setBottom(bool c);
     void setBottomLeft(bool c);
     void setLeft(bool c);
+
+    void updatePixmap();
 
 signals:
     void swapped(bool);
@@ -79,9 +81,7 @@ private:
     bool bottomLeft;
     bool left;
 
-    //------ METHODS ---------
-
-    void updatePixmap();
+    QList<QPixmap*> pixmaps;
 
     //------ OPERATORS ---------
 

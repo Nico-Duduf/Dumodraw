@@ -36,6 +36,7 @@
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
    <addaction name="actionProject_settings"/>
+   <addaction name="actionModules"/>
    <addaction name="separator"/>
    <addaction name="actionExport"/>
   </widget>
@@ -143,6 +144,14 @@
    </property>
    <property name="toolTip">
     <string>Adjust project settings</string>
+   </property>
+  </action>
+  <action name="actionModules">
+   <property name="text">
+    <string>Modules</string>
+   </property>
+   <property name="toolTip">
+    <string>Select the modules you want to use</string>
    </property>
   </action>
  </widget>

@@ -1,20 +1,21 @@
 <RCC>
-    <qresource prefix="/">
-        <file alias="bottom">resources/test images/bottom.png</file>
-        <file alias="bottom-left">resources/test images/bottom-left.png</file>
-        <file alias="left">resources/test images/left.png</file>
-        <file alias="left-right">resources/test images/left-right.png</file>
-        <file alias="left-top">resources/test images/left-top.png</file>
-        <file alias="right">resources/test images/right.png</file>
-        <file alias="right-bottom">resources/test images/right-bottom.png</file>
-        <file alias="top">resources/test images/top.png</file>
-        <file alias="top-bottom">resources/test images/top-bottom.png</file>
-        <file alias="top-right">resources/test images/top-right.png</file>
+    <qresource prefix="/"/>
+    <qresource prefix="/default module">
         <file alias="0">resources/test images/0.png</file>
-        <file alias="all">resources/test images/all.png</file>
-        <file alias="bottom-left-top">resources/test images/bottom-left-top.png</file>
-        <file alias="left-top-right">resources/test images/left-top-right.png</file>
-        <file alias="right-bottom-left">resources/test images/right-bottom-left.png</file>
-        <file alias="top-right-bottom">resources/test images/top-right-bottom.png</file>
+        <file alias="1">resources/test images/1.png</file>
+        <file alias="2">resources/test images/2.png</file>
+        <file alias="3">resources/test images/3.png</file>
+        <file alias="4">resources/test images/4.png</file>
+        <file alias="5">resources/test images/5.png</file>
+        <file alias="6">resources/test images/6.png</file>
+        <file alias="7">resources/test images/7.png</file>
+        <file alias="8">resources/test images/8.png</file>
+        <file alias="9">resources/test images/9.png</file>
+        <file alias="10">resources/test images/10.png</file>
+        <file alias="11">resources/test images/11.png</file>
+        <file alias="12">resources/test images/12.png</file>
+        <file alias="13">resources/test images/13.png</file>
+        <file alias="14">resources/test images/14.png</file>
+        <file alias="15">resources/test images/15.png</file>
     </qresource>
 </RCC>

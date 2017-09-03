@@ -4,7 +4,7 @@
 #include <QtDebug>
 #endif
 
-Cell::Cell(int r, int c, QColor backgroundColor, QWidget *parent) :
+Cell::Cell(int r, int c, QList<QPixmap *> pix, QColor backgroundColor, QWidget *parent) :
     QWidget(parent)
 {
     setupUi(this);
@@ -45,6 +45,8 @@ Cell::Cell(int r, int c, QColor backgroundColor, QWidget *parent) :
     bottom = false;
     bottomLeft = false;
     left = false;
+
+    pixmaps = pix;
 }
 
 void Cell::click(int currentTool)
@@ -115,86 +117,86 @@ void Cell::updatePixmap()
     //NONE
     if (!top && !topRight && !right && !bottomRight && !bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/0"));
+        label->setPixmap(*pixmaps[0]);
     }
     //TOP
     else if (top && !topRight && !right && !bottomRight && !bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/top"));
+        label->setPixmap(*pixmaps[1]);
     }
     //RIGHT
     else if (!top && !topRight && right && !bottomRight && !bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/right"));
+        label->setPixmap(*pixmaps[2]);
     }
     //BOTTOM
     else if (!top && !topRight && !right && !bottomRight && bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/bottom"));
+        label->setPixmap(*pixmaps[3]);
     }
     //LEFT
     else if (!top && !topRight && !right && !bottomRight && !bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/left"));
+        label->setPixmap(*pixmaps[4]);
     }
     //LEFT-TOP
     else if (top && !topRight && !right && !bottomRight && !bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/left-top"));
+        label->setPixmap(*pixmaps[5]);
     }
     //TOP-RIGHT
     else if (top && !topRight && right && !bottomRight && !bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/top-right"));
+        label->setPixmap(*pixmaps[6]);
     }
     //RIGHT-BOTTOM
     else if (!top && !topRight && right && !bottomRight && bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/right-bottom"));
+        label->setPixmap(*pixmaps[7]);
     }
     //BOTTOM-LEFT
     else if (!top && !topRight && !right && !bottomRight && bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/bottom-left"));
+        label->setPixmap(*pixmaps[8]);
     }
     //TOP-BOTTOM
     else if (top && !topRight && !right && !bottomRight && bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/top-bottom"));
+        label->setPixmap(*pixmaps[14]);
     }
     //LEFT-RIGHT
     else if (!top && !topRight && right && !bottomRight && !bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/left-right"));
+        label->setPixmap(*pixmaps[13]);
     }
     //BOTTOM-LEFT-TOP
     else if (top && !topRight && !right && !bottomRight && bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/bottom-left-top"));
+        label->setPixmap(*pixmaps[9]);
     }
     //LEFT-TOP-RIGHT
     else if (top && !topRight && right && !bottomRight && !bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/left-top-right"));
+        label->setPixmap(*pixmaps[10]);
     }
     //RIGHT-BOTTOM-LEFT
     else if (!top && !topRight && right && !bottomRight && bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/right-bottom-left"));
+        label->setPixmap(*pixmaps[12]);
     }
     //TOP-RIGHT-BOTTOM
     else if (top && !topRight && right && !bottomRight && bottom && !bottomLeft && !left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/top-right-bottom"));
+        label->setPixmap(*pixmaps[11]);
     }
     //CROSS
     else if (top && !topRight && right && !bottomRight && bottom && !bottomLeft && left && !topLeft)
     {
-        label->setPixmap(QPixmap(":/all"));
+        label->setPixmap(*pixmaps[15]);
     }
     else
     {
-        label->setPixmap(QPixmap(""));
+        label->setPixmap(QPixmap());
     }
 }
 

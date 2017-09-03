@@ -8,6 +8,7 @@
 #include "cell.h"
 #include "exportform.h"
 #include "projectform.h"
+#include "modulesform.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -22,17 +23,21 @@ private slots:
     void on_actionDeselect_triggered();
     void on_actionDisconnect_triggered();
     void on_actionConnect_triggered();
+
     void on_actionExport_triggered();
+    void on_actionProject_settings_triggered();
+    void on_actionModules_triggered();
 
     void exportFinished();
     void projectSettingsCancelled();
     void projectSettingsChanged();
-
-    void on_actionProject_settings_triggered();
+    void modulesChanged(QString path);
+    void modulesCancelled();
 
 private:
     ExportForm *exportForm;
     ProjectForm *projectForm;
+    ModulesForm * modulesForm;
     QStackedLayout *stackedLayout;
     QWidget *gridWidget;
     QGridLayout *mainLayout;
@@ -44,7 +49,11 @@ private:
     int rowCount;
     int columnCount;
 
+    QList<QPixmap*> pixmaps;
+
     void mapEvents();
+
+    void loadModule(QString path);
 
     void clickCell(QPoint pos);
     void swapTool();
@@ -56,6 +65,7 @@ private:
 
     void showProjectForm();
     void showExportForm();
+    void showModulesForm();
     void showGrid();
 
     bool eventFilter(QObject *obj, QEvent *event);

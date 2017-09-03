@@ -25,13 +25,18 @@ MainWindow::MainWindow(QWidget *parent) :
     stackedLayout->addWidget(projectForm);
     projectForm->hide();
 
+    //Modules Form
+    modulesForm = new ModulesForm(this);
+    stackedLayout->addWidget(modulesForm);
+    modulesForm->hide();
+
     //Grid
     gridWidget = new QWidget(this);
     mainLayout = new QGridLayout;
     mainLayout->setMargin(0);
     gridWidget->setLayout(mainLayout);
     //set grid color and size
-    gridWidget->setStyleSheet("background-color: #bbb;");
+    gridWidget->setStyleSheet("#gridWidget { background-color: #bbb; }");
     mainLayout->setSpacing(1);
     stackedLayout->addWidget(gridWidget);
 
@@ -40,6 +45,12 @@ MainWindow::MainWindow(QWidget *parent) :
     currentTool = 1;
     rowCount = 0;
     columnCount = 0;
+    for (int i = 0 ; i < 16 ; i++)
+    {
+        pixmaps << new QPixmap();
+    }
+    //load default
+    loadModule(":/default module");
 
     //show grid
     mainLayout->setSpacing(1);
@@ -57,8 +68,65 @@ void MainWindow::mapEvents()
 {
     connect(exportForm,SIGNAL(finished()),this,SLOT(exportFinished()));
     connect(exportForm,SIGNAL(canceled()),this,SLOT(exportFinished()));
+
     connect(projectForm,SIGNAL(ok()),this,SLOT(projectSettingsChanged()));
     connect(projectForm,SIGNAL(cancel()),this,SLOT(projectSettingsCancelled()));
+
+    connect(modulesForm,SIGNAL(ok(QString)),this,SLOT(modulesChanged(QString)));
+    connect(modulesForm,SIGNAL(cancel()),this,SLOT(modulesCancelled()));
+}
+
+void MainWindow::loadModule(QString path)
+{
+    //add the missing / at the end
+    if (!path.endsWith("/") || !path.endsWith("\\")) path = path + "/";
+
+    QDir dir(path);
+    QStringList files = dir.entryList(QDir::Files);
+
+    //check if all files are here
+    if (!path.startsWith(":/"))
+    {
+        for (int i = 0 ; i < 16 ; i++)
+        {
+            bool found = false;
+            foreach (QString file,files)
+            {
+               if (file.startsWith(QString::number(i) + "."))
+               {
+                   found = true;
+                   break;
+               }
+            }
+            if (!found) return;
+            //TODO alert missing file in kit
+        }
+    }
+
+    //check file extension
+    QString extension = "";
+    //check
+    foreach (QString file,files)
+    {
+        if (file.startsWith("0."))
+        {
+            extension = file.right(file.count() - file.lastIndexOf("."));
+            break;
+        }
+    }
+
+    //load images
+    for (int i = 0 ; i < 16 ; i++)
+    {
+        pixmaps[i]->load(path + QString::number(i) + extension);
+    }
+
+    //update cells
+    for (int i = 0 ; i < mainLayout->count() ; i++)
+    {
+        Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(i)->widget());
+        cell->updatePixmap();
+    }
 }
 
 void MainWindow::createCells(int numRows, int numColumns, QColor backgroundColor)
@@ -128,7 +196,7 @@ void MainWindow::createCells(int numRows, int numColumns, QColor backgroundColor
 void MainWindow::createCell(int row, int col, QColor backgroundColor)
 {
     //create cell
-    Cell *cell = new Cell(row,col,backgroundColor);
+    Cell *cell = new Cell(row,col,pixmaps,backgroundColor);
     mainLayout->addWidget(cell,row,col);
 
 
@@ -170,18 +238,28 @@ void MainWindow::showProjectForm()
 {
     projectForm->show();
     exportForm->hide();
+    modulesForm->hide();
 }
 
 void MainWindow::showExportForm()
 {
     projectForm->hide();
     exportForm->show();
+    modulesForm->hide();
+}
+
+void MainWindow::showModulesForm()
+{
+    projectForm->hide();
+    exportForm->hide();
+    modulesForm->show();
 }
 
 void MainWindow::showGrid()
 {
     projectForm->hide();
     exportForm->hide();
+    modulesForm->hide();
 }
 
 void MainWindow::clickCell(QPoint pos)
@@ -322,6 +400,17 @@ void MainWindow::projectSettingsChanged()
     projectForm->hide();
 }
 
+void MainWindow::modulesChanged(QString path)
+{
+    loadModule(path);
+    modulesForm->hide();
+}
+
+void MainWindow::modulesCancelled()
+{
+    modulesForm->hide();
+}
+
 //ACTIONS
 
 void MainWindow::on_actionPaint_triggered()
@@ -405,6 +494,11 @@ void MainWindow::on_actionProject_settings_triggered()
     showProjectForm();
 }
 
+void MainWindow::on_actionModules_triggered()
+{
+    showModulesForm();
+}
+
 //EVENT FILTER
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -465,6 +559,4 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
-
-
 
