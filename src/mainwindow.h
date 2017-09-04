@@ -4,6 +4,11 @@
 #include "ui_mainwindow.h"
 
 #include <QMouseEvent>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
+#include <QFileDialog>
 
 #include "cell.h"
 #include "exportform.h"
@@ -34,6 +39,8 @@ private slots:
     void modulesChanged(QString path);
     void modulesCancelled();
 
+    void on_actionSave_triggered();
+
 private:
     ExportForm *exportForm;
     ProjectForm *projectForm;
@@ -50,7 +57,11 @@ private:
     int columnCount;
 
     QList<QPixmap*> pixmaps;
+    QString kitName;
+    QString kitPath;
     QColor backgroundColor;
+    QString projectName;
+    QString projectPath;
 
     void mapEvents();
 
@@ -63,6 +74,9 @@ private:
     void createCells(int numRows, int numColumns, QColor backgroundColor = QColor("#ffffff"));
     void createCell(int row, int col, QColor backgroundColor = QColor("#ffffff"));
     void removeLine(int row, int column, bool deleteWidgets = true);
+
+    void save();
+    void saveAs();
 
     void showProjectForm();
     void showExportForm();

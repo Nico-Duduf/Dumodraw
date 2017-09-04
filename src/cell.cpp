@@ -96,6 +96,11 @@ void Cell::setChecked(bool c)
     emit swapped(checked);
 }
 
+bool Cell::isChecked()
+{
+    return checked;
+}
+
 bool Cell::isSelected()
 {
     return selected;
@@ -246,6 +251,46 @@ void Cell::setLeft(bool c)
 {
     left = c;
     updatePixmap();
+}
+
+bool Cell::getTopLeft()
+{
+    return topLeft;
+}
+
+bool Cell::getTop()
+{
+    return top;
+}
+
+bool Cell::getTopRight()
+{
+    return topRight;
+}
+
+bool Cell::getRight()
+{
+    return right;
+}
+
+bool Cell::getBottomRight()
+{
+    return bottomRight;
+}
+
+bool Cell::getBottom()
+{
+    return bottom;
+}
+
+bool Cell::getBottomLeft()
+{
+    return bottomLeft;
+}
+
+bool Cell::getLeft()
+{
+    return left;
 }
 
 int Cell::getRow()

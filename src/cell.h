@@ -16,6 +16,7 @@ public:
     explicit Cell(int r, int c,QList<QPixmap*> pix, QColor backgroundColor = QColor("#ffffff"), QWidget *parent = 0);
     void click(int currentTool);
     void setChecked(bool c);
+    bool isChecked();
     void setSelected(bool c);
     void setBackgroundColor(QColor c);
     QColor getBackgroundColor();
@@ -34,6 +35,15 @@ public slots:
     void setBottom(bool c);
     void setBottomLeft(bool c);
     void setLeft(bool c);
+
+    bool getTopLeft();
+    bool getTop();
+    bool getTopRight();
+    bool getRight();
+    bool getBottomRight();
+    bool getBottom();
+    bool getBottomLeft();
+    bool getLeft();
 
     void updatePixmap();
 

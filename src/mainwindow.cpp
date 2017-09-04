@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     //load default
     loadModule(":/module/default");
+    projectName = "New Project";
+    projectPath = "";
 
     //show grid
     mainLayout->setSpacing(1);
@@ -83,8 +85,12 @@ void MainWindow::loadModule(QString path)
     //add the missing / at the end
     if (!path.endsWith("/") || !path.endsWith("\\")) path = path + "/";
 
+    kitPath = path;
+
     QDir dir(path);
     QStringList files = dir.entryList(QDir::Files);
+
+    kitName = dir.dirName();
 
     //check if all files are here
     if (!path.startsWith(":/"))
@@ -239,6 +245,85 @@ void MainWindow::removeLine(int row, int column, bool deleteWidgets) {
     }
 }
 
+void MainWindow::save()
+{
+    QString savePath = projectPath;
+    QString saveName = projectName;
+    QFile saveFile(projectPath + projectName);
+
+    //Ask for path (if first save) (save as)
+    if (projectPath == "" || !saveFile.exists())
+    {
+        saveAs();
+    }
+    if (projectPath == "") return;
+
+    saveFile.setFileName(projectPath + projectName);
+
+    //Create JSON
+    QJsonObject project;
+    project.insert("version",QJsonValue("0.0.1-alpha"));
+    project.insert("background",QJsonValue(backgroundColor.name()));
+    project.insert("kitName",QJsonValue(kitName));
+    project.insert("kitAbsoluteURI",QJsonValue(QDir(kitPath).absolutePath()));
+    project.insert("kitRelativePath",QJsonValue(QDir(savePath).relativeFilePath(kitPath)));
+    project.insert("aspectRatio",QJsonValue(1));
+
+    //Save Cells
+    QJsonArray cellsArray;
+    //do not get all cells in mainLayout, but use rows and cols to sort them
+    for (int row = 0 ; row < rowCount ; row++)
+    {
+        QJsonArray rowArray;
+        for (int col = 0 ; col < columnCount ; col++)
+        {
+            Cell *cell = qobject_cast<Cell*>(mainLayout->itemAtPosition(row,col)->widget());
+            QJsonObject cellObj;
+            cellObj.insert("checked",cell->isChecked());
+            cellObj.insert("row",row);
+            cellObj.insert("column",col);
+            if (cell->isChecked())
+            {
+                cellObj.insert("top",cell->getTop());
+                cellObj.insert("topRight",cell->getTopRight());
+                cellObj.insert("right",cell->getRight());
+                cellObj.insert("bottomRight",cell->getBottomRight());
+                cellObj.insert("bottom",cell->getBottom());
+                cellObj.insert("bottomLeft",cell->getBottomLeft());
+                cellObj.insert("left",cell->getLeft());
+                cellObj.insert("topLeft",cell->getTopLeft());
+            }
+            rowArray.append(cellObj);
+        }
+        cellsArray.append(rowArray);
+    }
+    project.insert("rows",cellsArray);
+
+    //save to file
+    QJsonDocument doc(project);
+    saveFile.open(QIODevice::WriteOnly | QIODevice::Text);
+    saveFile.write(doc.toJson());
+    saveFile.close();
+}
+
+void MainWindow::saveAs()
+{
+    QString savePath = projectPath;
+    QString saveName = projectName;
+    QFile saveFile(projectPath + projectName);
+
+    QString projectFileName = QFileDialog::getSaveFileName(this,"Where do you want to save the project?","","Modraw project (*.dmdp);;JSON (*.json);;Text (*.txt);;All Files (*.*)");
+    if (projectFileName == "") return;
+    saveFile.setFileName(projectFileName);
+    savePath = QFileInfo(saveFile).absolutePath();
+    saveName = QFileInfo(saveFile).completeBaseName() + "." + QFileInfo(saveFile).suffix();
+
+    projectName = saveName;
+    projectPath = savePath;
+    if (!projectPath.endsWith("/")) projectPath = projectPath + "/";
+    this->setWindowTitle("Duduf Modraw - " + QFileInfo(saveFile).completeBaseName());
+}
+
 void MainWindow::showProjectForm()
 {
     projectForm->show();
@@ -276,7 +361,7 @@ void MainWindow::clickCell(QPoint pos)
     {
         currentCell = cell;
         cell->click(currentTool);
-        if (currentTool == 3 || currentTool == 5 || currentTool == 6)
+        if (currentTool != 4 || currentTool == 5 || currentTool == 6)
         {
             selectedCells << cell;
         }
@@ -504,6 +589,11 @@ void MainWindow::on_actionModules_triggered()
     showModulesForm();
 }
 
+void MainWindow::on_actionSave_triggered()
+{
+    save();
+}
+
 //EVENT FILTER
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -564,4 +654,5 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
+
 
