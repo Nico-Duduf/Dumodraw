@@ -318,7 +318,7 @@ bool MainWindow::saveAs()
     QString saveName = projectName;
     QFile saveFile(projectPath + projectName);
 
-    QString projectFileName = QFileDialog::getSaveFileName(this,"Where do you want to save the project?","","Modraw project (*.dmdp);;JSON (*.json);;Text (*.txt);;All Files (*.*)");
+    QString projectFileName = QFileDialog::getSaveFileName(this,"Where do you want to save the project?",projectPath,"Modraw project (*.dmdp);;JSON (*.json);;Text (*.txt);;All Files (*.*)");
     if (projectFileName == "") return false;
     saveFile.setFileName(projectFileName);
     savePath = QFileInfo(saveFile).absolutePath();
@@ -330,6 +330,12 @@ bool MainWindow::saveAs()
     this->setWindowTitle("Duduf Modraw - " + QFileInfo(saveFile).completeBaseName());
 
     return true;
+}
+
+void MainWindow::open()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,"Select the project you want to open",projectPath,"Modraw project (*.dmdp);;JSON (*.json);;Text (*.txt);;All Files (*.*)");
+    if (filename == "") return;
 }
 
 void MainWindow::showProjectForm()
@@ -609,6 +615,10 @@ void MainWindow::on_actionSave_as_triggered()
     if (saveAs()) save();
 }
 
+void MainWindow::on_actionOpen_triggered()
+{
+    open();
+}
 
 //EVENT FILTER
 
@@ -670,4 +680,3 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
-

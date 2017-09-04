@@ -142,7 +142,7 @@
   </action>
   <action name="actionProject_settings">
    <property name="text">
-    <string>Project settings</string>
+    <string>Project settings...</string>
    </property>
    <property name="toolTip">
     <string>Adjust project settings</string>
@@ -150,7 +150,7 @@
   </action>
   <action name="actionModules">
    <property name="text">
-    <string>Modules</string>
+    <string>Modules...</string>
    </property>
    <property name="toolTip">
     <string>Select the modules you want to use</string>
@@ -169,7 +169,7 @@
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
    </property>
    <property name="toolTip">
     <string>Open project (Ctrl + O)</string>
@@ -180,7 +180,7 @@
   </action>
   <action name="actionNew">
    <property name="text">
-    <string>New</string>
+    <string>New...</string>
    </property>
    <property name="toolTip">
     <string>New project (Ctrl + N)</string>

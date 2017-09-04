@@ -44,6 +44,8 @@ private slots:
 
     void on_actionSave_as_triggered();
 
+    void on_actionOpen_triggered();
+
 private:
     ExportForm *exportForm;
     ProjectForm *projectForm;
@@ -80,6 +82,7 @@ private:
 
     void save();
     bool saveAs();
+    void open();
 
     void showProjectForm();
     void showExportForm();
