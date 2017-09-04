@@ -48,6 +48,12 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->insertAction(actionExport,actionSave);
     toolBar->insertSeparator(actionExport);
 
+    //Erase menu
+    QMenu * eraseMenu = new QMenu(this);
+    eraseMenu->addAction(actionErase_All);
+    actionErase->setMenu(eraseMenu);
+    toolBar->insertAction(actionConnect,actionErase);
+
     //INITIALIZE
     painting = false;
     currentTool = 1;
@@ -256,6 +262,23 @@ void MainWindow::removeLine(int row, int column, bool deleteWidgets) {
     }
 }
 
+void MainWindow::resetProject()
+{
+    for (int i = 0 ; i < mainLayout->count() ; i++)
+    {
+        Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(i)->widget());
+        cell->setChecked(false);
+        cell->setTop(false);
+        cell->setTopRight(false);
+        cell->setRight(false);
+        cell->setBottomRight(false);
+        cell->setBottom(false);
+        cell->setBottomLeft(false);
+        cell->setLeft(false);
+        cell->setTopLeft(false);
+    }
+}
+
 void MainWindow::save()
 {
     QString savePath = projectPath;
@@ -367,7 +390,7 @@ void MainWindow::open()
         //TODO aspect ratio
 
         //load cells
-        //TODO Wipe all
+        resetProject();
         //create
         QJsonArray rows = project.value("rows").toArray();
         //TODO alert no rows
@@ -751,4 +774,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       // standard event processing
       return QObject::eventFilter(obj, event);
   }
+}
+
+void MainWindow::on_actionErase_All_triggered()
+{
+    resetProject();
 }

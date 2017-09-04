@@ -31,7 +31,6 @@
    <addaction name="actionSelect"/>
    <addaction name="actionDeselect"/>
    <addaction name="actionPaint"/>
-   <addaction name="actionErase"/>
    <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
@@ -198,6 +197,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionErase_All">
+   <property name="text">
+    <string>Erase All</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset to an empty project</string>
    </property>
   </action>
  </widget>

@@ -46,6 +46,8 @@ private slots:
 
     void on_actionOpen_triggered();
 
+    void on_actionErase_All_triggered();
+
 private:
     ExportForm *exportForm;
     ProjectForm *projectForm;
@@ -79,6 +81,7 @@ private:
     void createCells(int numRows, int numColumns, QColor backgroundColor = QColor("#ffffff"));
     void createCell(int row, int col, QColor backgroundColor = QColor("#ffffff"));
     void removeLine(int row, int column, bool deleteWidgets = true);
+    void resetProject();
 
     void save();
     bool saveAs();
