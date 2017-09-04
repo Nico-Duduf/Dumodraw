@@ -9,6 +9,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QFileDialog>
+#include <QMenu>
 
 #include "cell.h"
 #include "exportform.h"
@@ -40,6 +41,8 @@ private slots:
     void modulesCancelled();
 
     void on_actionSave_triggered();
+
+    void on_actionSave_as_triggered();
 
 private:
     ExportForm *exportForm;
@@ -76,7 +79,7 @@ private:
     void removeLine(int row, int column, bool deleteWidgets = true);
 
     void save();
-    void saveAs();
+    bool saveAs();
 
     void showProjectForm();
     void showExportForm();

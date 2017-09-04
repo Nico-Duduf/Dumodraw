@@ -41,6 +41,13 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->setSpacing(1);
     stackedLayout->addWidget(gridWidget);
 
+    //Save menu
+    QMenu * saveMenu = new QMenu(this);
+    saveMenu->addAction(actionSave_as);
+    actionSave->setMenu(saveMenu);
+    toolBar->insertAction(actionExport,actionSave);
+    toolBar->insertSeparator(actionExport);
+
     //INITIALIZE
     painting = false;
     currentTool = 1;
@@ -252,11 +259,10 @@ void MainWindow::save()
     QFile saveFile(projectPath + projectName);
 
     //Ask for path (if first save) (save as)
-    if (projectPath == "" || !saveFile.exists())
+    if (projectPath == "")
     {
-        saveAs();
+        if (!saveAs()) return;
     }
-    if (projectPath == "") return;
 
     saveFile.setFileName(projectPath + projectName);
 
@@ -306,14 +312,14 @@ void MainWindow::save()
     saveFile.close();
 }
 
-void MainWindow::saveAs()
+bool MainWindow::saveAs()
 {
     QString savePath = projectPath;
     QString saveName = projectName;
     QFile saveFile(projectPath + projectName);
 
     QString projectFileName = QFileDialog::getSaveFileName(this,"Where do you want to save the project?","","Modraw project (*.dmdp);;JSON (*.json);;Text (*.txt);;All Files (*.*)");
-    if (projectFileName == "") return;
+    if (projectFileName == "") return false;
     saveFile.setFileName(projectFileName);
     savePath = QFileInfo(saveFile).absolutePath();
     saveName = QFileInfo(saveFile).completeBaseName() + "." + QFileInfo(saveFile).suffix();
@@ -322,6 +328,8 @@ void MainWindow::saveAs()
     projectPath = savePath;
     if (!projectPath.endsWith("/")) projectPath = projectPath + "/";
     this->setWindowTitle("Duduf Modraw - " + QFileInfo(saveFile).completeBaseName());
+
+    return true;
 }
 
 void MainWindow::showProjectForm()
@@ -596,6 +604,12 @@ void MainWindow::on_actionSave_triggered()
     save();
 }
 
+void MainWindow::on_actionSave_as_triggered()
+{
+    if (saveAs()) save();
+}
+
+
 //EVENT FILTER
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -656,5 +670,4 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
-
 
