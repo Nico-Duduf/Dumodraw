@@ -48,6 +48,8 @@ private slots:
 
     void on_actionErase_All_triggered();
 
+    void on_actionNew_triggered();
+
 private:
     ExportForm *exportForm;
     ProjectForm *projectForm;
@@ -69,6 +71,7 @@ private:
     QColor backgroundColor;
     QString projectName;
     QString projectPath;
+    bool newProject;
 
     void mapEvents();
 

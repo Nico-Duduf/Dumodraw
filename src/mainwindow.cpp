@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     loadModule(":/module/default");
     projectName = "New Project";
     projectPath = "";
+    newProject = false;
 
     //show grid
     mainLayout->setSpacing(1);
@@ -430,6 +431,10 @@ void MainWindow::open()
                 }
             }
         }
+
+        projectPath = QFileInfo(openFile).absolutePath() + "/";
+        projectName = QFileInfo(openFile).completeBaseName() + "." + QFileInfo(openFile).suffix();
+        this->setWindowTitle("Duduf Modraw - " + QFileInfo(openFile).completeBaseName());
     }
 }
 
@@ -581,6 +586,16 @@ void MainWindow::projectSettingsCancelled()
 
 void MainWindow::projectSettingsChanged()
 {
+    //if new project, wipe all
+    if (newProject)
+    {
+        resetProject();
+        this->setWindowTitle("Duduf Modraw");
+        projectName = "";
+        projectPath = "";
+    }
+    newProject = false;
+
     //cells
     createCells(projectForm->numRows(),projectForm->numColumns(),projectForm->BGColor());
 
@@ -715,6 +730,12 @@ void MainWindow::on_actionOpen_triggered()
     open();
 }
 
+void MainWindow::on_actionNew_triggered()
+{
+    newProject = true;
+    showProjectForm();
+}
+
 //EVENT FILTER
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -780,3 +801,4 @@ void MainWindow::on_actionErase_All_triggered()
 {
     resetProject();
 }
+
