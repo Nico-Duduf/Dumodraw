@@ -355,7 +355,9 @@ void MainWindow::showGrid()
 void MainWindow::clickCell(QPoint pos)
 {
     //Get the widget
-    Cell *cell = qobject_cast<Cell*>(qApp->widgetAt(pos)->parent());
+    QWidget *current = qApp->widgetAt(pos);
+    if (!current) return;
+    Cell *cell = qobject_cast<Cell*>(current->parent());
     if (!cell) return;
     if (currentCell != cell)
     {
