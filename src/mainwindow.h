@@ -70,7 +70,7 @@ private:
 
     void mapEvents();
 
-    void loadModule(QString path);
+    bool loadModule(QString path);
 
     void clickCell(QPoint pos);
     void swapTool();

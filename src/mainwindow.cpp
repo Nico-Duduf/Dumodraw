@@ -87,7 +87,7 @@ void MainWindow::mapEvents()
     connect(modulesForm,SIGNAL(cancel()),this,SLOT(modulesCancelled()));
 }
 
-void MainWindow::loadModule(QString path)
+bool MainWindow::loadModule(QString path)
 {
     //add the missing / at the end
     if (!path.endsWith("/") || !path.endsWith("\\")) path = path + "/";
@@ -95,6 +95,8 @@ void MainWindow::loadModule(QString path)
     kitPath = path;
 
     QDir dir(path);
+    //TODO alert invalid
+    if (!dir.exists()) return false;
     QStringList files = dir.entryList(QDir::Files);
 
     kitName = dir.dirName();
@@ -113,7 +115,7 @@ void MainWindow::loadModule(QString path)
                    break;
                }
             }
-            if (!found) return;
+            if (!found) return false;
             //TODO alert missing file in kit
         }
     }
@@ -146,6 +148,8 @@ void MainWindow::loadModule(QString path)
         Cell *cell = qobject_cast<Cell*>(mainLayout->itemAt(i)->widget());
         cell->updatePixmap();
     }
+
+    return true;
 }
 
 void MainWindow::createCells(int numRows, int numColumns, QColor backgroundColor)
@@ -308,6 +312,7 @@ void MainWindow::save()
     //save to file
     QJsonDocument doc(project);
     saveFile.open(QIODevice::WriteOnly | QIODevice::Text);
+
     saveFile.write(doc.toJson());
     saveFile.close();
 }
@@ -335,7 +340,74 @@ bool MainWindow::saveAs()
 void MainWindow::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this,"Select the project you want to open",projectPath,"Modraw project (*.dmdp);;JSON (*.json);;Text (*.txt);;All Files (*.*)");
-    if (filename == "") return;
+    if (fileName == "") return;
+    QFile openFile(fileName);
+    if (openFile.open(QFile::ReadOnly | QFile::Text))
+    {
+        QString data = openFile.readAll();
+        openFile.close();
+        if (data == "") return;
+        //check project version, settings, etc
+        QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
+        QJsonObject project = doc.object();
+        QString version = project.value("version").toString();
+        //TODO Check version
+        //TODO alert if invalid
+        if (version == "") return;
+        QString background = project.value("background").toString();
+        if (background != "") backgroundColor = QColor(background);
+        //load kit
+        QString kit = project.value("kitAbsoluteURI").toString();
+        bool ok = loadModule(kit);
+        if (!ok)
+        {
+            kit = project.value("kitRelativePath").toString();
+            loadModule(kit);
+        }
+        //TODO aspect ratio
+
+        //load cells
+        //TODO Wipe all
+        //create
+        QJsonArray rows = project.value("rows").toArray();
+        //TODO alert no rows
+        if (rows.count() == 0) return;
+        if (rows[0].toArray().count() == 0) return;
+        createCells(rows.count(),rows[0].toArray().count(),backgroundColor);
+        //update cells
+        foreach(QJsonValue rowValue,rows)
+        {
+            QJsonArray row = rowValue.toArray();
+            foreach(QJsonValue colValue,row)
+            {
+                QJsonObject cellObj = colValue.toObject();
+                bool checked = cellObj.value("checked").toBool();
+                int row = cellObj.value("row").toInt();
+                int column = cellObj.value("column").toInt();
+                Cell *cell = qobject_cast<Cell*>(mainLayout->itemAtPosition(row,column)->widget());
+                cell->setChecked(checked);
+                if (checked)
+                {
+                    bool top = cellObj.value("top").toBool();
+                    bool topRight = cellObj.value("topRight").toBool();
+                    bool right = cellObj.value("right").toBool();
+                    bool bottomRight = cellObj.value("bottomRight").toBool();
+                    bool bottom = cellObj.value("bottom").toBool();
+                    bool bottomLeft = cellObj.value("bottomLeft").toBool();
+                    bool left = cellObj.value("left").toBool();
+                    bool topLeft = cellObj.value("topLeft").toBool();
+                    cell->setTop(top);
+                    cell->setTopRight(topRight);
+                    cell->setRight(right);
+                    cell->setBottomRight(bottomRight);
+                    cell->setBottom(bottom);
+                    cell->setBottomLeft(bottomLeft);
+                    cell->setLeft(left);
+                    cell->setTopLeft(topLeft);
+                }
+            }
+        }
+    }
 }
 
 void MainWindow::showProjectForm()
